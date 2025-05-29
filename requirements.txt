@@ -1,0 +1,115 @@
+# Agentic-IAM Python Dependencies
+
+# Core Framework Dependencies
+cryptography>=41.0.0
+PyJWT>=2.8.0
+requests>=2.31.0
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+python-dotenv>=1.0.0
+
+# FastAPI and Web Framework
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+python-multipart>=0.0.6
+jinja2>=3.1.0
+
+# Database and Storage
+SQLAlchemy>=2.0.0
+aiosqlite>=0.19.0
+redis>=4.5.0
+
+# Data Processing and Analytics
+numpy>=1.24.0
+pandas>=2.0.0
+python-dateutil>=2.8.0
+
+# Streamlit Dashboard
+streamlit>=1.28.0
+plotly>=5.15.0
+streamlit-authenticator>=0.2.3
+streamlit-option-menu>=0.3.6
+nest-asyncio>=1.5.8
+
+# Authentication and Security
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+httpx>=0.25.0
+
+# Monitoring and Logging
+prometheus-client>=0.17.0
+structlog>=23.1.0
+
+# Testing and Development
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+pytest-mock>=3.11.0
+
+# Code Quality
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.4.0
+isort>=5.12.0
+
+# Optional Production Dependencies
+# Uncomment as needed:
+
+# Production Database Support
+# psycopg2-binary>=2.9.0     # PostgreSQL
+# mysql-connector-python>=8.0.33  # MySQL
+# pymongo>=4.5.0            # MongoDB
+
+# Advanced ML and Analytics
+# scikit-learn>=1.3.0
+# tensorflow>=2.13.0
+# torch>=2.0.0
+
+# Enhanced Security
+# python3-saml>=1.15.0      # SAML support
+# keyring>=24.0.0           # Secure credential storage
+
+# Message Queue and Caching
+# celery>=5.3.0             # Task queue
+# rabbitmq>=0.2.0           # Message broker
+
+# Monitoring and Metrics
+# grafana-api>=1.0.3
+# elasticsearch>=8.0.0
+
+# Cloud and Deployment
+# boto3>=1.28.0             # AWS SDK
+# azure-identity>=1.14.0    # Azure SDK
+# google-cloud-core>=2.3.0  # Google Cloud SDK
+# kubernetes>=27.2.0        # K8s client
+
+# Development Tools
+# jupyter>=1.0.0
+# ipython>=8.0.0
+# pre-commit>=3.0.0
+# sphinx>=7.0.0             # Documentation
+
+# Performance and Optimization
+# gunicorn>=21.0.0          # WSGI server
+# gevent>=23.0.0            # Async networking
+# cython>=3.0.0             # Performance optimization
+
+# Configuration Management
+# python-decouple>=3.8
+# dynaconf>=3.2.0
+
+# Utilities
+# click>=8.1.0              # CLI framework
+# rich>=13.0.0              # Rich terminal output
+# typer>=0.9.0              # Modern CLI framework
+# toml>=0.10.0              # TOML parsing
+
+# Testing and Mocking
+# factory-boy>=3.3.0       # Test data factories
+# faker>=19.0.0             # Fake data generation
+# responses>=0.23.0         # HTTP request mocking
+
+# Documentation
+# mkdocs>=1.5.0
+# mkdocs-material>=9.0.0
+# sphinx-rtd-theme>=1.3.0

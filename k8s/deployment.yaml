@@ -1,0 +1,341 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agentic-iam-deployment
+  namespace: agentic-iam
+  labels:
+    app.kubernetes.io/name: agentic-iam
+    app.kubernetes.io/component: application
+    app.kubernetes.io/version: "1.0.0"
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: agentic-iam
+      app.kubernetes.io/component: application
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: agentic-iam
+        app.kubernetes.io/component: application
+        app.kubernetes.io/version: "1.0.0"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: agentic-iam-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      
+      # Init containers for dependencies
+      initContainers:
+      - name: wait-for-postgres
+        image: postgres:15-alpine
+        command:
+        - sh
+        - -c
+        - |
+          until pg_isready -h postgres-service -p 5432 -U agentic_user; do
+            echo "Waiting for PostgreSQL..."
+            sleep 2
+          done
+          echo "PostgreSQL is ready!"
+        env:
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: agentic-iam-secrets
+              key: postgres-password
+      
+      - name: wait-for-redis
+        image: redis:7-alpine
+        command:
+        - sh
+        - -c
+        - |
+          until redis-cli -h redis-service -p 6379 ping; do
+            echo "Waiting for Redis..."
+            sleep 2
+          done
+          echo "Redis is ready!"
+      
+      containers:
+      - name: agentic-iam
+        image: agentic-iam:1.0.0
+        imagePullPolicy: IfNotPresent
+        
+        ports:
+        - name: api
+          containerPort: 8000
+          protocol: TCP
+        - name: dashboard
+          containerPort: 8501
+          protocol: TCP
+        - name: metrics
+          containerPort: 9090
+          protocol: TCP
+        
+        env:
+        # Load configuration from ConfigMap
+        - name: AGENTIC_IAM_ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: agentic-iam-config
+              key: AGENTIC_IAM_ENVIRONMENT
+        
+        - name: AGENTIC_IAM_API_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: agentic-iam-config
+              key: AGENTIC_IAM_API_HOST
+        
+        - name: AGENTIC_IAM_API_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: agentic-iam-config
+              key: AGENTIC_IAM_API_PORT
+        
+        - name: AGENTIC_IAM_DASHBOARD_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: agentic-iam-config
+              key: AGENTIC_IAM_DASHBOARD_HOST
+        
+        - name: AGENTIC_IAM_DASHBOARD_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: agentic-iam-config
+              key: AGENTIC_IAM_DASHBOARD_PORT
+        
+        # Database Configuration
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: agentic-iam-secrets
+              key: postgres-password
+        
+        - name: AGENTIC_IAM_DATABASE_URL
+          value: "postgresql://agentic_user:$(POSTGRES_PASSWORD)@postgres-service:5432/agentic_iam"
+        
+        - name: AGENTIC_IAM_REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: agentic-iam-config
+              key: AGENTIC_IAM_REDIS_URL
+        
+        # Security Configuration from Secrets
+        - name: AGENTIC_IAM_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: agentic-iam-secrets
+              key: secret-key
+        
+        - name: AGENTIC_IAM_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: agentic-iam-secrets
+              key: encryption-key
+        
+        - name: AGENTIC_IAM_JWT_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: agentic-iam-secrets
+              key: jwt-secret-key
+        
+        - name: AGENTIC_IAM_CREDENTIAL_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: agentic-iam-secrets
+              key: credential-encryption-key
+        
+        # Feature flags and other config from ConfigMap
+        - name: AGENTIC_IAM_ENABLE_TRUST_SCORING
+          valueFrom:
+            configMapKeyRef:
+              name: agentic-iam-config
+              key: AGENTIC_IAM_ENABLE_TRUST_SCORING
+        
+        - name: AGENTIC_IAM_ENABLE_AUDIT_LOGGING
+          valueFrom:
+            configMapKeyRef:
+              name: agentic-iam-config
+              key: AGENTIC_IAM_ENABLE_AUDIT_LOGGING
+        
+        - name: AGENTIC_IAM_LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: agentic-iam-config
+              key: AGENTIC_IAM_LOG_LEVEL
+        
+        # Resource limits and requests
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "2000m"
+        
+        # Health checks
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: api
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+          successThreshold: 1
+        
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: api
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+          successThreshold: 1
+        
+        startupProbe:
+          httpGet:
+            path: /health
+            port: api
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 5
+          failureThreshold: 20
+          successThreshold: 1
+        
+        # Volume mounts
+        volumeMounts:
+        - name: logs
+          mountPath: /app/logs
+        - name: data
+          mountPath: /app/data
+        - name: ssl-certs
+          mountPath: /app/ssl
+          readOnly: true
+        
+        # Security context
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+            - ALL
+      
+      # Volumes
+      volumes:
+      - name: logs
+        persistentVolumeClaim:
+          claimName: agentic-iam-logs-pvc
+      - name: data
+        persistentVolumeClaim:
+          claimName: agentic-iam-data-pvc
+      - name: ssl-certs
+        secret:
+          secretName: agentic-iam-tls
+          defaultMode: 0400
+      
+      # Pod-level security and scheduling
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - agentic-iam
+              topologyKey: kubernetes.io/hostname
+      
+      tolerations:
+      - key: "application"
+        operator: "Equal"
+        value: "agentic-iam"
+        effect: "NoSchedule"
+      
+      terminationGracePeriodSeconds: 60
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: agentic-iam
+  labels:
+    app.kubernetes.io/name: nginx
+    app.kubernetes.io/component: proxy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nginx
+      app.kubernetes.io/component: proxy
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: nginx
+        app.kubernetes.io/component: proxy
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+        
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+        - name: ssl-certs
+          mountPath: /etc/nginx/ssl
+          readOnly: true
+        
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+      - name: ssl-certs
+        secret:
+          secretName: agentic-iam-tls

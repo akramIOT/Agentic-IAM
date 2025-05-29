@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: agentic-iam
+  labels:
+    name: agentic-iam
+    app.kubernetes.io/name: agentic-iam
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/component: namespace
+    app.kubernetes.io/part-of: agentic-iam
+    app.kubernetes.io/managed-by: kubectl
+  annotations:
+    description: "Agentic Identity & Access Management Platform"
