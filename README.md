@@ -330,7 +330,7 @@ For support and questions:
 
 - Documentation: [Framework Docs](docs/)
 - Issues: [GitHub Issues](https://github.com/your-org/agent-identity/issues)
-- Security: security@your-org.com
+- Security: 
 
 ## Changelog
 
