@@ -314,9 +314,9 @@ This framework is inspired by and implements concepts from the following researc
 arXiv:2505.19301 [cs.CR] - [https://arxiv.org/abs/2505.19301](https://arxiv.org/abs/2505.19301)
 
 ### Foundational Research
-**[Title from arXiv:2505.10609]**  
-*[Authors from arXiv:2505.10609]*  
-arXiv:2505.10609 - [https://arxiv.org/abs/2505.10609](https://arxiv.org/abs/2505.10609)
+**Agent Name Service (ANS): A Universal Directory for Secure AI Agent Discovery and Interoperability**  
+*Ken Huang, Vineeth Sai Narajala, Idan Habler, Akram Sheriff*  
+arXiv:2505.10609 [cs.CR] - [https://arxiv.org/abs/2505.10609](https://arxiv.org/abs/2505.10609)
 
 These papers provide the theoretical foundation for the zero-trust identity architecture, decentralized authentication mechanisms, and fine-grained access control systems implemented in this framework.
 
