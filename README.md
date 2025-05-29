@@ -1,399 +1,353 @@
-# Agentic-IAM: Python Implementation
+# Agent Identity Framework
 
-A comprehensive Agent Identity & Access Management platform built in Python, integrating all components of the Agent Identity Framework into a unified, production-ready system.
+A comprehensive Python framework for managing agent identities, authentication, authorization, and trust in multi-agent systems.
 
-## 🏗️ Architecture Overview
+## Overview
 
-The Agentic-IAM platform is built as a modular system with the following core components:
+This framework provides a complete solution for agent identity management with enterprise-grade security features, compliance support, and intelligent trust scoring.
 
-### Core Components
-- **Agent Identity Framework Integration**: Complete integration of all 10 core subsystems
-- **FastAPI Backend**: REST API server with comprehensive endpoints
-- **Streamlit Dashboard**: Web-based administration and monitoring interface
-- **Intelligence Engine**: AI-powered trust scoring and anomaly detection
-- **Audit & Compliance**: Comprehensive logging and regulatory compliance
+## Features
 
-### Key Features
-- 🔐 **Multi-Factor Authentication** (JWT, mTLS, Cryptographic, MFA)
-- 🛡️ **Hybrid Authorization** (RBAC, ABAC, PBAC)
-- 📊 **AI-Powered Trust Scoring** with behavioral analysis
-- 🔍 **Real-time Anomaly Detection** and security monitoring
-- 📋 **Compliance Frameworks** (GDPR, HIPAA, SOX, PCI-DSS)
-- 🌐 **Federated Identity** (OIDC, SAML, DIDComm)
-- 🔄 **Session Management** with lifecycle control
-- 📈 **Intelligence Analytics** and reporting
+### 🔐 Core Identity Management
+- **Agent Identity**: UUID-based identities with metadata and cryptographic keys
+- **Digital Signatures**: Ed25519 and RSA support for identity verification
+- **DID Support**: Decentralized Identifier document generation
 
-## 📁 Project Structure
+### 🔑 Authentication Subsystem
+- **JWT Authentication**: Secure token-based authentication
+- **Cryptographic Auth**: Challenge-response with digital signatures
+- **mTLS Support**: Mutual TLS certificate-based authentication
+- **Multi-Factor Auth**: Configurable multi-factor authentication flows
 
-```
-Agentic-IAM-Python/
-├── main.py                     # Application entry point
-├── requirements.txt            # Python dependencies
-├── README.md                   # This file
-├── core/
-│   └── agentic_iam.py         # Core IAM integration orchestrator
-├── config/
-│   └── settings.py            # Comprehensive configuration management
-├── api/
-│   ├── main.py                # FastAPI application
-│   ├── models.py              # Pydantic request/response models
-│   └── routers/
-│       ├── health.py          # Health monitoring endpoints
-│       ├── agents.py          # Agent management API
-│       ├── authentication.py  # Authentication endpoints
-│       ├── authorization.py   # Authorization API
-│       ├── sessions.py        # Session management
-│       ├── intelligence.py    # Trust scoring & analytics
-│       └── audit.py           # Audit & compliance API
-├── dashboard/
-│   ├── main.py                # Streamlit dashboard entry
-│   ├── utils.py               # Dashboard utilities
-│   └── components/
-│       ├── agent_management.py      # Agent management UI
-│       ├── trust_analytics.py       # Trust scoring dashboard
-│       ├── security_monitoring.py   # Security monitoring
-│       ├── compliance_dashboard.py  # Compliance reporting
-│       └── system_administration.py # System admin interface
-├── utils/
-│   └── logger.py              # Centralized logging utilities
-├── tests/                     # Test suites (to be implemented)
-├── scripts/                   # Deployment and utility scripts
-└── docker/                    # Docker configurations
-```
+### 🛡️ Authorization Engine
+- **RBAC**: Role-Based Access Control with inheritance
+- **ABAC**: Attribute-Based Access Control with policy engine
+- **PBAC**: Policy-Based Access Control with custom rules
+- **Hybrid Engine**: Combine multiple authorization approaches
 
-## 🚀 Quick Start
+### 📋 Session Management
+- **Secure Sessions**: Token lifecycle with TTL and refresh
+- **Audit Trails**: Comprehensive session activity logging
+- **Rate Limiting**: Configurable limits and security policies
+- **Multi-Session Support**: Agent session limits and management
 
-### Prerequisites
-- Python 3.8+
-- pip or conda package manager
-- Optional: Redis for production session storage
-- Optional: PostgreSQL for production database
+### 🌐 Federated Identity
+- **OIDC Support**: OpenID Connect integration
+- **SAML Integration**: SAML 2.0 identity provider support
+- **DIDComm**: Decentralized identity communication
+- **Trust Brokers**: Cross-domain trust relationships
+
+### 🔒 Credential Management
+- **Secure Storage**: Encrypted credential vault with rotation
+- **Key Rotation**: Automated and policy-based rotation
+- **Multiple Backends**: In-memory and file-based storage
+- **Credential Types**: API keys, passwords, certificates, tokens
+
+### 📖 Agent Registry
+- **Discovery Service**: Agent registration and lookup
+- **Persistent Storage**: SQLite and in-memory backends
+- **Search & Filter**: Advanced query capabilities
+- **Audit Logging**: Complete registry operation tracking
+
+### 🚀 Transport Binding
+- **Multi-Protocol**: HTTP/HTTPS, gRPC, WebSocket, STDIO support
+- **Security Enforcement**: Transport-layer security policies
+- **Identity Extraction**: Automatic identity binding from requests
+- **Rate Limiting**: Per-agent and per-transport limits
+
+### 📊 Audit & Compliance
+- **Comprehensive Logging**: All identity operations tracked
+- **Compliance Frameworks**: GDPR, HIPAA, SOX, PCI-DSS support
+- **Integrity Verification**: Cryptographic audit trail protection
+- **Automated Reports**: Compliance violation detection
+
+### 🧠 Agent Intelligence
+- **Trust Scoring**: ML-based trust and reputation scoring
+- **Anomaly Detection**: Behavioral pattern analysis
+- **Risk Assessment**: Dynamic risk level calculation
+- **Behavioral Profiling**: Agent activity pattern learning
+
+## Quick Start
 
 ### Installation
 
-1. **Clone and navigate to the project:**
-```bash
-cd /Users/akram_personal/2025/CLAUDE_GENERATED_CODE/AGENT_IDENTITY/Agentic-IAM-Python
-```
-
-2. **Install dependencies:**
 ```bash
 pip install -r requirements.txt
 ```
 
-3. **Configure environment (optional):**
-```bash
-cp .env.example .env
-# Edit .env with your configuration
+### Basic Usage
+
+```python
+from agent_identity import AgentIdentity, AgentMetadata, IdentityClaims
+from authentication import JWTAuthentication, AuthenticationManager
+from authorization import RBACEngine, Role
+from session_manager import SessionManager, InMemorySessionStore, AuditLogger
+
+# Create an agent identity
+metadata = AgentMetadata(
+    name="My Agent",
+    agent_type="service_bot",
+    version="1.0.0",
+    organization="MyOrg"
+)
+
+claims = IdentityClaims(
+    role="agent",
+    permissions=["read", "write"],
+    scopes=["user_data"]
+)
+
+agent = AgentIdentity(metadata=metadata, claims=claims)
+
+# Set up authentication
+auth_manager = AuthenticationManager()
+jwt_auth = JWTAuthentication(secret_key="your-secret-key")
+auth_manager.register_method("jwt", jwt_auth, is_default=True)
+
+# Generate and verify token
+token = jwt_auth.generate_token(agent)
+result = auth_manager.authenticate({'token': token}, 'jwt')
+
+print(f"Authentication successful: {result.success}")
+print(f"Agent ID: {result.agent_id}")
 ```
 
-4. **Run the platform:**
-```bash
-python main.py
+### Advanced Usage
+
+```python
+from authorization import HybridAuthorizationEngine, Policy, PolicyRule, Effect
+from session_manager import SessionManager
+from agent_registry import AgentRegistry, InMemoryAgentStorage, RegistryAuditor
+from credential_manager import CredentialManager, InMemoryCredentialStore, FernetEncryption
+from audit_compliance import AuditManager, SQLiteAuditStorage, ComplianceFramework
+from agent_intelligence import AgentIntelligenceEngine
+
+# Set up comprehensive system
+session_store = InMemorySessionStore()
+session_manager = SessionManager(session_store)
+
+registry_storage = InMemoryAgentStorage()
+registry = AgentRegistry(registry_storage)
+
+credential_store = InMemoryCredentialStore()
+credential_encryption = FernetEncryption()
+credential_manager = CredentialManager(credential_store, credential_encryption)
+
+audit_storage = SQLiteAuditStorage("audit.db")
+audit_manager = AuditManager(audit_storage)
+
+intelligence_engine = AgentIntelligenceEngine()
+
+# Register agent
+registry.register_agent(
+    agent,
+    endpoints=["https://my-agent.example.com"],
+    capabilities=["text_processing", "data_analysis"]
+)
+
+# Create session
+from authentication import AuthenticationResult
+auth_result = AuthenticationResult(success=True, agent_id=agent.agent_id, auth_method="jwt")
+session_id = session_manager.create_session(agent, auth_result)
+
+# Store credentials
+api_key_id = credential_manager.store_credential(
+    name="External API Key",
+    credential_data="secret_api_key_123",
+    credential_type=CredentialType.API_KEY,
+    owner_agent_id=agent.agent_id
+)
+
+# Log audit event
+audit_manager.log_event(
+    AuditEventType.AUTH_SUCCESS,
+    agent_id=agent.agent_id,
+    session_id=session_id,
+    details={"method": "jwt"}
+)
+
+# Calculate trust score
+events = audit_manager.query_events(AuditQuery(agent_id=agent.agent_id))
+trust_score = intelligence_engine.calculate_trust_score(agent.agent_id, events)
+
+print(f"Trust Score: {trust_score.overall_score:.3f}")
+print(f"Risk Level: {trust_score.risk_level.value}")
 ```
 
-This will start:
-- API Server: http://localhost:8000
-- Dashboard: http://localhost:8501
-- API Documentation: http://localhost:8000/docs
+## Architecture
 
-### Alternative: Run components separately
+### Core Components
 
-**API Server only:**
-```bash
-cd api && python main.py
-```
+1. **AgentIdentity**: Core identity representation with cryptographic keys
+2. **Authentication**: Multi-method authentication with JWT, signatures, mTLS
+3. **Authorization**: Flexible policy-based access control
+4. **SessionManager**: Secure session lifecycle management
+5. **FederatedIdentity**: Cross-domain identity federation
+6. **CredentialManager**: Secure credential storage and rotation
+7. **AgentRegistry**: Agent discovery and registration service
+8. **TransportBinding**: Protocol-agnostic identity binding
+9. **AuditCompliance**: Comprehensive audit logging and compliance
+10. **AgentIntelligence**: ML-based trust scoring and anomaly detection
 
-**Dashboard only:**
-```bash
-streamlit run dashboard/main.py
-```
+### Security Features
 
-## 🔧 Configuration
-
-The platform uses a comprehensive configuration system with environment variable support:
-
-### Key Configuration Options
-
-#### Core Platform
-- `AGENTIC_IAM_ENVIRONMENT`: deployment environment (development/production)
-- `AGENTIC_IAM_API_HOST`: API server host (default: 127.0.0.1)
-- `AGENTIC_IAM_API_PORT`: API server port (default: 8000)
-- `AGENTIC_IAM_DASHBOARD_PORT`: Dashboard port (default: 8501)
-
-#### Security
-- `AGENTIC_IAM_SECRET_KEY`: Platform secret key
-- `AGENTIC_IAM_JWT_SECRET_KEY`: JWT signing key
-- `AGENTIC_IAM_ENCRYPTION_KEY`: Data encryption key (32 chars)
-- `AGENTIC_IAM_ENABLE_MFA`: Enable multi-factor authentication
-- `AGENTIC_IAM_REQUIRE_TLS`: Require TLS connections
-
-#### Features
-- `AGENTIC_IAM_ENABLE_TRUST_SCORING`: Enable AI trust scoring
-- `AGENTIC_IAM_ENABLE_AUDIT_LOGGING`: Enable audit logging
-- `AGENTIC_IAM_ENABLE_FEDERATED_AUTH`: Enable federated identity
-- `AGENTIC_IAM_ENABLE_ANOMALY_DETECTION`: Enable anomaly detection
-
-#### Database
-- `AGENTIC_IAM_DATABASE_URL`: Database connection string
-- `AGENTIC_IAM_REDIS_URL`: Redis connection for sessions (optional)
-
-See `config/settings.py` for complete configuration options.
-
-## 📚 API Documentation
-
-### Authentication Endpoints
-- `POST /api/v1/auth/login` - Agent authentication
-- `POST /api/v1/auth/logout` - Session termination
-- `POST /api/v1/auth/refresh` - Token refresh
-- `GET /api/v1/auth/challenge/{agent_id}` - Get cryptographic challenge
-- `POST /api/v1/auth/verify-signature` - Verify signature
-- `GET /api/v1/auth/methods` - Available auth methods
-
-### Agent Management
-- `GET /api/v1/agents` - List agents
-- `POST /api/v1/agents` - Register new agent
-- `GET /api/v1/agents/{agent_id}` - Get agent details
-- `PUT /api/v1/agents/{agent_id}` - Update agent
-- `DELETE /api/v1/agents/{agent_id}` - Delete agent
-
-### Authorization
-- `POST /api/v1/authz/authorize` - Authorization decision
-- `POST /api/v1/authz/batch-authorize` - Batch authorization
-- `GET /api/v1/authz/policies` - List policies
-- `POST /api/v1/authz/policies` - Create policy
-- `GET /api/v1/authz/roles` - List roles
-- `POST /api/v1/authz/roles` - Create role
-
-### Intelligence & Trust
-- `GET /api/v1/intelligence/trust-score/{agent_id}` - Get trust score
-- `POST /api/v1/intelligence/trust-score/update` - Update trust score
-- `GET /api/v1/intelligence/anomalies` - List anomalies
-- `POST /api/v1/intelligence/analyze` - Behavioral analysis
-
-### Session Management
-- `GET /api/v1/sessions` - List sessions
-- `POST /api/v1/sessions` - Create session
-- `GET /api/v1/sessions/{session_id}` - Get session details
-- `PUT /api/v1/sessions/{session_id}/refresh` - Refresh session
-- `DELETE /api/v1/sessions/{session_id}` - Terminate session
-
-### Audit & Compliance
-- `GET /api/v1/audit/events` - List audit events
-- `POST /api/v1/audit/events/query` - Query audit events
-- `GET /api/v1/audit/statistics` - Audit statistics
-- `POST /api/v1/audit/compliance/reports` - Generate compliance report
-
-Full API documentation available at: `http://localhost:8000/docs`
-
-## 🖥️ Dashboard Features
-
-### Agent Management
-- **Agent Registration**: Register new agents with comprehensive metadata
-- **Agent Monitoring**: Real-time status and session monitoring
-- **Bulk Operations**: Mass updates and administration
-- **Trust Score Visualization**: Interactive trust score analytics
-
-### Security Monitoring
-- **Real-time Alerts**: Security incidents and anomalies
-- **Authentication Analytics**: Login patterns and failures
-- **Session Monitoring**: Active session tracking
-- **Risk Assessment**: Platform-wide risk dashboard
-
-### Trust Analytics
-- **Trust Score Trends**: Historical trust score analysis
-- **Behavioral Patterns**: Agent behavior visualization
-- **Anomaly Detection**: Security anomaly identification
-- **Risk Indicators**: Risk factor analysis
-
-### Compliance Dashboard
-- **Framework Assessment**: GDPR, HIPAA, SOX, PCI-DSS compliance
-- **Violation Tracking**: Compliance violation monitoring
-- **Report Generation**: Automated compliance reporting
-- **Audit Trail**: Complete audit trail visualization
-
-### System Administration
-- **Configuration Management**: Real-time configuration updates
-- **System Health**: Component status monitoring
-- **Performance Metrics**: System performance analytics
-- **User Management**: Administrator access control
-
-## 🔒 Security Features
-
-### Authentication Methods
-- **JWT Tokens**: Stateless token-based authentication
-- **mTLS**: Mutual TLS certificate authentication
-- **Cryptographic**: Challenge-response with digital signatures
-- **Multi-Factor**: TOTP, SMS, email-based MFA
-- **Federated**: OIDC, SAML, DIDComm integration
-
-### Authorization Engines
-- **RBAC**: Role-based access control
-- **ABAC**: Attribute-based access control
-- **PBAC**: Policy-based access control
-- **Hybrid**: Combined authorization strategies
-
-### Intelligence & Analytics
-- **Trust Scoring**: AI-powered agent trust assessment
-- **Anomaly Detection**: Real-time behavioral analysis
-- **Risk Assessment**: Continuous risk evaluation
-- **Behavioral Analytics**: Pattern recognition and analysis
-
-### Audit & Compliance
-- **Comprehensive Logging**: All system activities logged
-- **Integrity Verification**: Cryptographic audit log protection
-- **Compliance Frameworks**: Built-in regulatory compliance
-- **Real-time Monitoring**: Continuous compliance assessment
-
-## 🏢 Enterprise Features
+- **End-to-End Encryption**: All sensitive data encrypted at rest and in transit
+- **Digital Signatures**: Cryptographic verification of agent actions
+- **Zero Trust Architecture**: Never trust, always verify approach
+- **Audit Trails**: Immutable audit logs with integrity verification
+- **Anomaly Detection**: ML-based behavioral analysis
+- **Compliance**: Built-in support for regulatory frameworks
 
 ### Scalability
-- **Microservice Architecture**: Modular, scalable design
-- **Async Processing**: Non-blocking operations
-- **Caching**: Redis-based session and data caching
-- **Load Balancing**: Horizontal scaling support
 
-### Monitoring & Observability
-- **Health Checks**: Kubernetes-ready health endpoints
-- **Metrics Export**: Prometheus metrics integration
-- **Structured Logging**: JSON-based logging with correlation IDs
-- **Distributed Tracing**: Request tracing across services
+- **Modular Design**: Use only the components you need
+- **Pluggable Backends**: Support for various storage systems
+- **Async Support**: Non-blocking operations where applicable
+- **Caching**: Intelligent caching for performance
+- **Federation**: Scale across trust domains
 
-### Integration
-- **REST APIs**: Comprehensive REST API coverage
-- **Webhook Support**: Event-driven integrations
-- **SDK Support**: Client libraries for major languages
-- **Protocol Support**: HTTP, gRPC, WebSocket, STDIO
+## Configuration
 
-### Deployment
-- **Docker Support**: Containerized deployment
-- **Kubernetes**: Production-ready K8s manifests
-- **Cloud Ready**: AWS, Azure, GCP deployment support
-- **Configuration Management**: Environment-specific configs
+### Environment Variables
 
-## 🔧 Development
+```bash
+# Database configuration
+AGENT_IDENTITY_DB_PATH=/path/to/database
+AGENT_IDENTITY_ENCRYPTION_KEY=your-encryption-key
+
+# Authentication configuration
+JWT_SECRET_KEY=your-jwt-secret
+JWT_TOKEN_TTL=3600
+
+# Session configuration
+SESSION_TTL=3600
+MAX_SESSIONS_PER_AGENT=5
+
+# Audit configuration
+AUDIT_LOG_PATH=/path/to/audit.log
+ENABLE_AUDIT_ENCRYPTION=true
+
+# Compliance configuration
+COMPLIANCE_FRAMEWORKS=gdpr,hipaa
+DATA_RETENTION_DAYS=2555  # 7 years
+```
+
+### Production Deployment
+
+For production deployments, consider:
+
+1. **Database Backend**: Use PostgreSQL or MySQL instead of SQLite
+2. **Redis Sessions**: Use Redis for distributed session storage
+3. **HSM Integration**: Hardware Security Module for key management
+4. **Load Balancing**: Distribute across multiple instances
+5. **Monitoring**: Integrate with Prometheus/Grafana
+6. **Backup Strategy**: Regular encrypted backups
+7. **Disaster Recovery**: Multi-region deployment
+
+## Security Considerations
+
+### Best Practices
+
+1. **Key Management**: Use HSM or cloud KMS for production keys
+2. **Secret Rotation**: Implement automated credential rotation
+3. **Network Security**: Use TLS 1.3 for all communications
+4. **Access Control**: Follow principle of least privilege
+5. **Monitoring**: Implement real-time security monitoring
+6. **Incident Response**: Have procedures for security incidents
+7. **Regular Audits**: Conduct security assessments
+
+### Threat Model
+
+The framework protects against:
+
+- **Identity Spoofing**: Cryptographic verification prevents impersonation
+- **Credential Theft**: Encrypted storage and rotation limit exposure
+- **Session Hijacking**: Secure session management with integrity checks
+- **Privilege Escalation**: Fine-grained authorization controls
+- **Insider Threats**: Comprehensive audit trails and anomaly detection
+- **Compliance Violations**: Automated compliance monitoring
+
+## Development
 
 ### Running Tests
+
 ```bash
-# Install dev dependencies
-pip install -r requirements.txt
+# Install development dependencies
+pip install pytest pytest-asyncio coverage
 
 # Run tests
 pytest tests/
 
 # Run with coverage
-pytest --cov=core --cov=api --cov=dashboard tests/
+coverage run -m pytest tests/
+coverage report
 ```
 
 ### Code Quality
+
 ```bash
 # Format code
-black .
+black agent_identity/
 
-# Lint code
-flake8 .
+# Check linting
+flake8 agent_identity/
 
 # Type checking
-mypy .
-
-# Sort imports
-isort .
+mypy agent_identity/
 ```
 
-### Development Server
-```bash
-# Run with auto-reload
-AGENTIC_IAM_AUTO_RELOAD=true python main.py
+### Contributing
 
-# Run in debug mode
-AGENTIC_IAM_DEBUG=true AGENTIC_IAM_LOG_LEVEL=DEBUG python main.py
-```
+1. Fork the repository
+2. Create a feature branch
+3. Implement your changes with tests
+4. Ensure code quality checks pass
+5. Submit a pull request
 
-## 📋 Integration with Agent Identity Framework
+## Academic References
 
-This Python implementation fully integrates all Agent Identity Framework components:
+This framework is inspired by and implements concepts from the following research:
 
-### Core Framework Modules
-1. **Agent Identity** (`agent_identity.py`) - Cryptographic identity management
-2. **Authentication** (`authentication.py`) - Multi-method authentication
-3. **Authorization** (`authorization.py`) - Hybrid authorization engines
-4. **Session Management** (`session_manager.py`) - Lifecycle management
-5. **Federated Identity** (`federated_identity.py`) - Federation protocols
-6. **Credential Manager** (`credential_manager.py`) - Secure credential storage
-7. **Agent Registry** (`agent_registry.py`) - Agent discovery and management
-8. **Transport Binding** (`transport_binding.py`) - Protocol security
-9. **Audit & Compliance** (`audit_compliance.py`) - Logging and compliance
-10. **Intelligence Engine** (`agent_intelligence.py`) - AI-powered insights
+### Zero-Trust Identity for Agentic AI
+**A Novel Zero-Trust Identity Framework for Agentic AI: Decentralized Authentication and Fine-Grained Access Control**  
+*Ken Huang, Vineeth Sai Narajala, John Yeoh, Ramesh Raskar, Youssef Harkati, Jerry Huang, Idan Habler, Chris Hughes*  
+arXiv:2505.19301 [cs.CR] - [https://arxiv.org/abs/2505.19301](https://arxiv.org/abs/2505.19301)
 
-### Integration Benefits
-- **Unified API**: Single API surface for all framework capabilities
-- **Consistent Configuration**: Centralized configuration management
-- **Seamless Operation**: Integrated workflows across all components
-- **Enhanced Security**: Coordinated security across all layers
-- **Comprehensive Monitoring**: Unified observability and analytics
+### Foundational Research
+**[Title from arXiv:2505.10609]**  
+*[Authors from arXiv:2505.10609]*  
+arXiv:2505.10609 - [https://arxiv.org/abs/2505.10609](https://arxiv.org/abs/2505.10609)
 
-## 🚀 Production Deployment
+These papers provide the theoretical foundation for the zero-trust identity architecture, decentralized authentication mechanisms, and fine-grained access control systems implemented in this framework.
 
-### Docker Deployment
-```bash
-# Build image
-docker build -t agentic-iam:latest .
+## License
 
-# Run container
-docker run -p 8000:8000 -p 8501:8501 agentic-iam:latest
-```
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-### Kubernetes Deployment
-```bash
-# Apply manifests
-kubectl apply -f k8s/
+## Support
 
-# Check status
-kubectl get pods -l app=agentic-iam
-```
+For support and questions:
 
-### Environment Configuration
-For production deployment, ensure:
-- Secure secret keys and encryption keys
-- Production database (PostgreSQL recommended)
-- Redis for session storage
-- TLS certificates for HTTPS
-- Proper firewall and network security
-- Monitoring and alerting setup
+- Documentation: [Framework Docs](docs/)
+- Issues: [GitHub Issues](https://github.com/your-org/agent-identity/issues)
+- Security: security@your-org.com
 
-## 📞 Support & Documentation
+## Changelog
 
-- **API Documentation**: http://localhost:8000/docs
-- **Dashboard**: http://localhost:8501
-- **Health Status**: http://localhost:8000/health
-- **Configuration Reference**: See `config/settings.py`
-- **Architecture Guide**: See framework documentation
+### v1.0.0
+- Initial release with all core components
+- Full authentication and authorization support
+- Comprehensive audit and compliance framework
+- Agent intelligence and trust scoring
+- Multi-protocol transport binding
+- Federated identity support
 
-## 🔄 Roadmap
+## Roadmap
 
-### Phase 1 (Current)
-- ✅ Core platform implementation
-- ✅ API development
-- ✅ Dashboard implementation
-- ✅ Framework integration
-
-### Phase 2 (Next)
-- 🔄 Comprehensive testing suite
-- 🔄 Performance optimization
-- 🔄 Enhanced monitoring
-- 🔄 Production hardening
-
-### Phase 3 (Future)
-- 📋 Advanced ML features
-- 📋 Cloud-native deployment
-- 📋 Mobile applications
-- 📋 Enterprise integrations
-
-## 📄 License
-
-This project integrates the Agent Identity Framework and provides a comprehensive platform for agent identity and access management.
-
----
-
-**Built with the Agent Identity Framework**  
-*Comprehensive Agent Identity & Access Management Platform*
+### Upcoming Features
+- GraphQL API interface
+- Kubernetes operator
+- Enhanced ML models for trust scoring
+- Additional compliance frameworks
+- Performance optimizations
+- Mobile agent support
