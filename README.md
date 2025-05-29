@@ -304,7 +304,7 @@ mypy agent_identity/
 4. Ensure code quality checks pass
 5. Submit a pull request
 
-## Academic AI Research References
+## Foundational Research & Academic AI Research References
 
 This framework is inspired by and implements concepts from the following research:
 
@@ -313,7 +313,7 @@ This framework is inspired by and implements concepts from the following researc
 *Ken Huang, Vineeth Sai Narajala, John Yeoh, Ramesh Raskar, Youssef Harkati, Jerry Huang, Idan Habler, Chris Hughes*  
 arXiv:2505.19301 [cs.CR] - [https://arxiv.org/abs/2505.19301](https://arxiv.org/abs/2505.19301)
 
-### Foundational Research
+
 **Agent Name Service (ANS): A Universal Directory for Secure AI Agent Discovery and Interoperability**  
 *Ken Huang, Vineeth Sai Narajala, Idan Habler, Akram Sheriff*  
 arXiv:2505.10609 [cs.CR] - [https://arxiv.org/abs/2505.10609](https://arxiv.org/abs/2505.10609)
