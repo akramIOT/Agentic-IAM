@@ -304,7 +304,7 @@ mypy agent_identity/
 4. Ensure code quality checks pass
 5. Submit a pull request
 
-## Academic References
+## Academic AI Research References
 
 This framework is inspired by and implements concepts from the following research:
 
