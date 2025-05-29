@@ -6,6 +6,9 @@ A comprehensive Python framework for managing agent identities, authentication, 
 
 This framework provides a complete solution for agent identity management with enterprise-grade security features, compliance support, and intelligent trust scoring.
 
+![Platform Overview](https://github.com/user-attachments/assets/9638885c-d336-43cd-a287-c086c06dd582)
+
+
 ## Features
 
 ### 🔐 Core Identity Management
