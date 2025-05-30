@@ -10,7 +10,7 @@ This framework provides a complete solution for agent identity management with e
 ![New Note](https://github.com/user-attachments/assets/ea52841b-80a9-4beb-a3c4-c1487827df19)
 
  System Architecture
-### 🏗️ Agentic-IAM Architecture Overview
+###  Agentic-IAM Architecture Overview
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
