@@ -20,21 +20,24 @@ This framework provides a complete solution for agent identity management with e
 ├─────────────────────────────────────────────────────────────┤
 │                    Core IAM Engine                          │
 │  ┌─────────────┬─────────────┬─────────────┬─────────────┐  │
-│  │   Agent     │ Authentication│ Authorization│  Session   │  │
+│  │   Agent     │ Authentication│ Authorization│  Session │  │
 │  │ Identity    │   Manager    │   Manager   │  Manager   │  │
 │  └─────────────┴─────────────┴─────────────┴─────────────┘  │
 │  ┌─────────────┬─────────────┬─────────────┬─────────────┐  │
-│  │ Federated   │ Credential  │   Agent     │ Transport  │  │
-│  │ Identity    │  Manager    │  Registry   │ Security   │  │
+│  │ Federated   │ Credential  │   Agent     │ Transport   │  │
+│  │ Identity    │  Manager    │  Registry   │ Security    │  │
 │  └─────────────┴─────────────┴─────────────┴─────────────┘  │
-│  ┌─────────────┬─────────────┬─────────────────────────────┐  │
-│  │   Audit &   │ Intelligence│    Trust Scoring &         │  │
-│  │ Compliance  │   Engine    │  Behavioral Analytics      │  │
-│  └─────────────┴─────────────┴─────────────────────────────┘  │
+│  ┌─────────────┬─────────────┬─────────────────────────────┐│
+│  │   Audit &   │ Intelligence│    Trust Scoring &          ││
+│  │ Compliance  │   Engine    │  Behavioral Analytics       ││
+│  └─────────────┴─────────────┴─────────────────────────────┘│
 ├─────────────────────────────────────────────────────────────┤
 │              Data Layer (SQLite/PostgreSQL)                 │
 └─────────────────────────────────────────────────────────────┘
 ```
+
+![Key Point](https://github.com/user-attachments/assets/697eb68a-ee80-4af6-9c72-65de212664c4)
+
 
 **Key Components:**
 - **Frontend:** Streamlit web dashboard for management
